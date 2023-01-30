@@ -23,13 +23,13 @@ with your collection of contacts: displaying contacts or adding new
 contacts as long as the user wishes, then saying goodbye when finished.
 The menu should offer these options.
 
-```pycon
-Program Options.
-   1.) Display all contacts
-   2.) Create new contact
-   3.) Exit
->>> option = input("Enter 1, 2, or 3: ")
-```
+.. code:: pycon
+
+    Program Options.
+       1.) Display all contacts
+       2.) Create new contact
+       3.) Exit
+    >>> option = input("Enter 1, 2, or 3: ")
 
 There are several examples of this kind of menu program scattered
 throughout the lecture notes for the first several weeks of the
@@ -48,47 +48,47 @@ contacts, add a new contact, then re-display the list to see that our
 contact has been added. Again, you are not required to save to disk
 before exiting.
 
-```console
- Program Options.
-    1.) Display all contacts
-    2.) Create new contact
-    3.) Save and exit
+.. code:: console
 
-Enter 1, 2, or 3: 1
+     Program Options.
+        1.) Display all contacts
+        2.) Create new contact
+        3.) Save and exit
 
-Name            Email
-smith, sue      ssmith@wer.com
-Dean, hugh      hrdean@abc.com
-green, sam      sgreen@rty.com
+    Enter 1, 2, or 3: 1
 
- Program Options.
-    1.) Display all contacts
-    2.) Create new contact
-    3.) Save and exit
+    Name            Email
+    smith, sue      ssmith@wer.com
+    Dean, hugh      hrdean@abc.com
+    green, sam      sgreen@rty.com
 
-Enter 1, 2, or 3: 2
+     Program Options.
+        1.) Display all contacts
+        2.) Create new contact
+        3.) Save and exit
 
-Enter contact's first name: mac
-Enter contact's last name: davis
-Enter contact email: mdavis@asd.com
+    Enter 1, 2, or 3: 2
 
- Program Options.
-    1.) Display all contacts
-    2.) Create new contact
-    3.) Save and exit
+    Enter contact's first name: mac
+    Enter contact's last name: davis
+    Enter contact email: mdavis@asd.com
 
-Enter 1, 2, or 3: 1
+     Program Options.
+        1.) Display all contacts
+        2.) Create new contact
+        3.) Save and exit
 
-Name            Email
-smith, sue      ssmith@wer.com
-Dean, hugh      hrdean@abc.com
-green, sam      sgreen@rty.com
-davis, mac      mdavis@asd.com
+    Enter 1, 2, or 3: 1
 
- Program Options.
-    1.) Display all contacts
-    2.) Create new contact
-    3.) Save and exit
+    Name            Email
+    smith, sue      ssmith@wer.com
+    Dean, hugh      hrdean@abc.com
+    green, sam      sgreen@rty.com
+    davis, mac      mdavis@asd.com
 
-Enter 1, 2, or 3:
-```
+     Program Options.
+        1.) Display all contacts
+        2.) Create new contact
+        3.) Save and exit
+
+    Enter 1, 2, or 3:
