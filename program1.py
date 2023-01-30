@@ -84,6 +84,41 @@ before exiting.
 """
 
 
+class Contact:
+    """A contact has a last name, first name, and email address.
+
+    Your program must contain a class named contact that has 3 attributes (instance variables):
+    last name, first name, and email. Your class should also have a method to return the full
+    name and email address for printing when requested.
+    """
+
+    def __init__(self, last_name: str, first_name: str, email: str) -> None:
+        """Initialize a new contact.
+
+        Parameters
+        ----------
+        last_name : str
+            The contact's last name.
+        first_name : str
+            The contact's first name.
+        email : str
+            The contact's email address.
+        """
+        self.last_name = last_name
+        self.first_name = first_name
+        self.email = email
+
+    def __str__(self) -> str:
+        """Return the full name and email address for printing.
+
+        Returns
+        -------
+        str
+            The full name and email address for printing.
+        """
+        return f"{self.last_name}, {self.first_name}\t{self.email}"
+
+
 def _main() -> None:
     pass
 
