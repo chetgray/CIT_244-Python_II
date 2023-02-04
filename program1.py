@@ -83,6 +83,10 @@ before exiting.
     Enter 1, 2, or 3:
 """
 
+__author__ = "Chet Gray <cgray0209@kctcs.edu>"
+__copyright__ = "Copyright  2023 Chet Gray"
+__license__ = "MIT"
+
 
 class Contact:
     """A contact has a last name, first name, and email address.
