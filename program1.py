@@ -138,29 +138,49 @@ def _main() -> None:
 
     while True:
         print(
-            """Enter a menu selection:
-[1] Display all contacts
-[2] Create new contact
-[3] Exit
-"""
+            "Enter a menu selection:\n"
+            "[1] Display all contacts\n"
+            "[2] Create new contact\n"
+            "[3] Exit\n"
         )
         menuInput = input(">>> ").strip()
         print()
-        if menuInput == "1":
-            print('"Last Name, First Name" <Email>')
-            print("===============================")
+        if menuInput == "1":  # Display all contacts
+            # Determine the necessary column widths, and print accordingly.
+            max_last_name_length = len("Last Name")
+            max_first_name_length = len("First Name")
+            max_email_length = len("Email")
             for contact in contacts:
-                print(contact)
+                max_last_name_length = max(max_last_name_length, len(contact.last_name))
+                max_first_name_length = max(max_first_name_length, len(contact.first_name))
+                max_email_length = max(max_email_length, len(contact.email))
+            print(
+                f"{'Last Name':^{max_last_name_length}}  "
+                f"{'First Name':^{max_first_name_length}}  "
+                f"{'Email':^{max_email_length}}"
+            )
+            print(
+                f"{'-' * max_last_name_length}  "
+                f"{'-' * max_first_name_length}  "
+                f"{'-' * max_email_length}"
+            )
+            for contact in contacts:
+                print(
+                    f"{contact.last_name:^{max_last_name_length}}  "
+                    f"{contact.first_name:^{max_first_name_length}}  "
+                    f"{contact.email:^{max_email_length}}"
+                )
             print()
-        elif menuInput == "2":
+        elif menuInput == "2":  # Create new contact
             first_name = input("Enter contact's first name: ").strip()
             last_name = input("Enter contact's last name: ").strip()
             email = input("Enter contact email: ").strip()
+            print()
             new_contact = Contact(last_name, first_name, email)
             contacts.append(new_contact)
-            print(f"Contact {new_contact} added.")
+            print(f"Successfully created contact: {new_contact}")
             print()
-        elif menuInput == "3":
+        elif menuInput == "3":  # Exit
             print("Goodbye!")
             break
         else:
