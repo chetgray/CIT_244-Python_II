@@ -149,7 +149,12 @@ def _main() -> None:
                 print(contact)
             print()
         elif menuInput == "2":
-            pass
+            first_name = input("Enter contact's first name: ").strip()
+            last_name = input("Enter contact's last name: ").strip()
+            email = input("Enter contact email: ").strip()
+            new_contact = Contact(last_name, first_name, email)
+            contacts.append(new_contact)
+            print(f"Contact {new_contact} added.")
         elif menuInput == "3":
             print("Goodbye!")
             break
