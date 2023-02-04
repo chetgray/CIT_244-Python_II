@@ -116,7 +116,7 @@ class Contact:
         str
             The full name and email address for printing.
         """
-        return f"{self.last_name}, {self.first_name}\t\t\t{self.email}"
+        return f'"{self.last_name}, {self.first_name}" <{self.email}>'
 
 
 def _main() -> None:
@@ -143,8 +143,8 @@ def _main() -> None:
         menuInput = input(">>> ").strip()
         print()
         if menuInput == "1":
-            print("Name\t\t\t\tEmail")
-            print("====\t\t\t\t=====")
+            print('"Last Name, First Name" <Email>')
+            print("===============================")
             for contact in contacts:
                 print(contact)
             print()
@@ -155,6 +155,7 @@ def _main() -> None:
             new_contact = Contact(last_name, first_name, email)
             contacts.append(new_contact)
             print(f"Contact {new_contact} added.")
+            print()
         elif menuInput == "3":
             print("Goodbye!")
             break
