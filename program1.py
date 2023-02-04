@@ -1,5 +1,5 @@
 #!/usr/bin/env python3.9
-""" CIT 244: Python II (4226_55Z1) - Program 1. Classes
+"""CIT 244: Python II (4226_55Z1) - Program 1. Classes
 
 We're going to write a program that manages the email address of our
 contacts. Your program must contain a class named contact that has 3
