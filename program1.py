@@ -116,11 +116,47 @@ class Contact:
         str
             The full name and email address for printing.
         """
-        return f"{self.last_name}, {self.first_name}\t{self.email}"
+        return f"{self.last_name}, {self.first_name}\t\t\t{self.email}"
 
 
 def _main() -> None:
-    pass
+    """The main entry point of the program.
+
+    Also, the program should have a menu that allows the user to interact with your collection
+    of contacts: displaying contacts or adding new contacts as long as the user wishes, then
+    saying goodbye when finished. The menu should offer these options.
+    """
+    contacts: list[Contact] = [
+        Contact("Marquardt", "Eda", "emarquardt@example.com"),
+        Contact("Hartman", "Earl", "ehartman@example.com"),
+        Contact("Muller", "Lester", "lmuller@example.com"),
+    ]
+
+    while True:
+        print(
+            """Enter a menu selection:
+[1] Display all contacts
+[2] Create new contact
+[3] Exit
+"""
+        )
+        menuInput = input(">>> ").strip()
+        print()
+        if menuInput == "1":
+            print("Name\t\t\t\tEmail")
+            print("====\t\t\t\t=====")
+            for contact in contacts:
+                print(contact)
+            print()
+        elif menuInput == "2":
+            pass
+        elif menuInput == "3":
+            print("Goodbye!")
+            break
+        else:
+            print("Invalid input. Please try again.")
+            print()
+            continue
 
 
 if __name__ == "__main__":
