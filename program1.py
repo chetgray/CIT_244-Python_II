@@ -88,6 +88,9 @@ __copyright__ = "Copyright  2023 Chet Gray"
 __license__ = "MIT"
 
 
+from typing import Iterable
+
+
 class Contact:
     """A contact has a last name, first name, and email address.
 
@@ -146,30 +149,7 @@ def _main() -> None:
         menuInput = input(">>> ").strip()
         print()
         if menuInput == "1":  # Display all contacts
-            # Determine the necessary column widths, and print accordingly.
-            max_last_name_length = len("Last Name")
-            max_first_name_length = len("First Name")
-            max_email_length = len("Email")
-            for contact in contacts:
-                max_last_name_length = max(max_last_name_length, len(contact.last_name))
-                max_first_name_length = max(max_first_name_length, len(contact.first_name))
-                max_email_length = max(max_email_length, len(contact.email))
-            print(
-                f"{'Last Name':^{max_last_name_length}}  "
-                f"{'First Name':^{max_first_name_length}}  "
-                f"{'Email':^{max_email_length}}"
-            )
-            print(
-                f"{'-' * max_last_name_length}  "
-                f"{'-' * max_first_name_length}  "
-                f"{'-' * max_email_length}"
-            )
-            for contact in contacts:
-                print(
-                    f"{contact.last_name:^{max_last_name_length}}  "
-                    f"{contact.first_name:^{max_first_name_length}}  "
-                    f"{contact.email:^{max_email_length}}"
-                )
+            print_contact_list(contacts)
             print()
         elif menuInput == "2":  # Create new contact
             first_name = input("Enter contact's first name: ").strip()
@@ -187,6 +167,36 @@ def _main() -> None:
             print("Invalid input. Please try again.")
             print()
             continue
+
+
+def print_contact_list(contacts: Iterable[Contact]) -> None:
+    """Print a list of contacts.
+
+    Parameters
+    ----------
+    contacts : Iterable[Contact]
+        The list of contacts to print.
+    """
+    # Determine the necessary column widths, and print accordingly.
+    max_last_name_length = len("Last Name")
+    max_first_name_length = len("First Name")
+    max_email_length = len("Email")
+    for contact in contacts:
+        max_last_name_length = max(max_last_name_length, len(contact.last_name))
+        max_first_name_length = max(max_first_name_length, len(contact.first_name))
+        max_email_length = max(max_email_length, len(contact.email))
+    print(
+        f"{'Last Name':^{max_last_name_length}}  {'First Name':^{max_first_name_length}}  Email"
+    )
+    print(
+        f"{'-' * max_last_name_length}  {'-' * max_first_name_length}  {'-' * max_email_length}"
+    )
+    for contact in contacts:
+        print(
+            f"{contact.last_name:<{max_last_name_length}}  "
+            f"{contact.first_name:<{max_first_name_length}}  "
+            f"{contact.email}"
+        )
 
 
 if __name__ == "__main__":
