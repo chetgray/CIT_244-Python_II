@@ -127,6 +127,46 @@ class Contact:
         return f'"{self.last_name}, {self.first_name}" <{self.email}>'
 
 
+@dataclass
+class Column:
+    """A column in a table.
+
+    Parameters
+    ----------
+    header : str
+        The column header.
+    attr : str
+        The attribute of the contact to display in this column.
+    width : int, default=0
+        The width of the column, by default 0
+    """
+
+    header: str
+    attr: str
+    width: int = 0
+
+
+def print_table(records: Iterable[object], columns: Iterable[Column]) -> None:
+    """Print a table of records.
+
+    Parameters
+    ----------
+    records : Iterable[object]
+        The list of records to print.
+    columns : Iterable[Column]
+        The columns of attributes from those records to print.
+    """
+    # Determine the necessary column widths, and print accordingly.
+    for column in columns:
+        column.width = len(column.header)
+        for record in records:
+            column.width = max(column.width, len(getattr(record, column.attr)))
+    print("  ".join(column.header.ljust(column.width) for column in columns))
+    print("  ".join("-" * column.width for column in columns))
+    for record in records:
+        print("  ".join(getattr(record, column.attr).ljust(column.width) for column in columns))
+
+
 def _main() -> None:
     """The main entry point of the program.
 
@@ -173,46 +213,6 @@ def _main() -> None:
             print("Invalid input. Please try again.")
             print()
             continue
-
-
-@dataclass
-class Column:
-    """A column in a table.
-
-    Parameters
-    ----------
-    header : str
-        The column header.
-    attr : str
-        The attribute of the contact to display in this column.
-    width : int, default=0
-        The width of the column, by default 0
-    """
-
-    header: str
-    attr: str
-    width: int = 0
-
-
-def print_table(records: Iterable[object], columns: Iterable[Column]) -> None:
-    """Print a table of records.
-
-    Parameters
-    ----------
-    records : Iterable[object]
-        The list of records to print.
-    columns : Iterable[Column]
-        The columns of attributes from those records to print.
-    """
-    # Determine the necessary column widths, and print accordingly.
-    for column in columns:
-        column.width = len(column.header)
-        for record in records:
-            column.width = max(column.width, len(getattr(record, column.attr)))
-    print("  ".join(column.header.ljust(column.width) for column in columns))
-    print("  ".join("-" * column.width for column in columns))
-    for record in records:
-        print("  ".join(getattr(record, column.attr).ljust(column.width) for column in columns))
 
 
 if __name__ == "__main__":
