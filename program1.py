@@ -174,7 +174,7 @@ def _main() -> None:
     of contacts: displaying contacts or adding new contacts as long as the user wishes, then
     saying goodbye when finished. The menu should offer these options.
     """
-    contacts: list[Contact] = [
+    contacts = [
         Contact("Marquardt", "Eda", "emarquardt@example.com"),
         Contact("Hartman", "Earl", "ehartman@example.com"),
         Contact("Muller", "Lester", "lmuller@example.com"),
