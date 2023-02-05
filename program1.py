@@ -139,6 +139,11 @@ def _main() -> None:
         Contact("Hartman", "Earl", "ehartman@example.com"),
         Contact("Muller", "Lester", "lmuller@example.com"),
     ]
+    columns = [
+        Column("Last Name", "last_name"),
+        Column("First Name", "first_name"),
+        Column("Email", "email"),
+    ]
 
     while True:
         print(
@@ -150,7 +155,7 @@ def _main() -> None:
         menuInput = input(">>> ").strip()
         print()
         if menuInput == "1":  # Display all contacts
-            print_contact_list(contacts)
+            print_table(contacts, columns)
             print()
         elif menuInput == "2":  # Create new contact
             first_name = input("Enter contact's first name: ").strip()
@@ -189,30 +194,25 @@ class Column:
     width: int = 0
 
 
-def print_contact_list(contacts: Iterable[Contact]) -> None:
-    """Print a list of contacts.
+def print_table(records: Iterable[object], columns: Iterable[Column]) -> None:
+    """Print a table of records.
 
     Parameters
     ----------
-    contacts : Iterable[Contact]
-        The list of contacts to print.
+    records : Iterable[object]
+        The list of records to print.
+    columns : Iterable[Column]
+        The columns of attributes from those records to print.
     """
-    columns = [
-        Column("Last Name", "last_name"),
-        Column("First Name", "first_name"),
-        Column("Email", "email"),
-    ]
     # Determine the necessary column widths, and print accordingly.
     for column in columns:
         column.width = len(column.header)
-        for contact in contacts:
-            column.width = max(column.width, len(getattr(contact, column.attr)))
+        for record in records:
+            column.width = max(column.width, len(getattr(record, column.attr)))
     print("  ".join(column.header.ljust(column.width) for column in columns))
     print("  ".join("-" * column.width for column in columns))
-    for contact in contacts:
-        print(
-            "  ".join(getattr(contact, column.attr).ljust(column.width) for column in columns)
-        )
+    for record in records:
+        print("  ".join(getattr(record, column.attr).ljust(column.width) for column in columns))
 
 
 if __name__ == "__main__":
