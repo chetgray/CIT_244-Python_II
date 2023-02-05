@@ -88,6 +88,7 @@ __copyright__ = "Copyright  2023 Chet Gray"
 __license__ = "MIT"
 
 
+from dataclasses import dataclass
 from typing import Iterable
 
 
@@ -169,6 +170,25 @@ def _main() -> None:
             continue
 
 
+@dataclass
+class Column:
+    """A column in a table.
+
+    Parameters
+    ----------
+    header : str
+        The column header.
+    attr : str
+        The attribute of the contact to display in this column.
+    width : int, default=0
+        The width of the column, by default 0
+    """
+
+    header: str
+    attr: str
+    width: int = 0
+
+
 def print_contact_list(contacts: Iterable[Contact]) -> None:
     """Print a list of contacts.
 
@@ -177,25 +197,21 @@ def print_contact_list(contacts: Iterable[Contact]) -> None:
     contacts : Iterable[Contact]
         The list of contacts to print.
     """
+    columns = [
+        Column("Last Name", "last_name"),
+        Column("First Name", "first_name"),
+        Column("Email", "email"),
+    ]
     # Determine the necessary column widths, and print accordingly.
-    max_last_name_length = len("Last Name")
-    max_first_name_length = len("First Name")
-    max_email_length = len("Email")
-    for contact in contacts:
-        max_last_name_length = max(max_last_name_length, len(contact.last_name))
-        max_first_name_length = max(max_first_name_length, len(contact.first_name))
-        max_email_length = max(max_email_length, len(contact.email))
-    print(
-        f"{'Last Name':^{max_last_name_length}}  {'First Name':^{max_first_name_length}}  Email"
-    )
-    print(
-        f"{'-' * max_last_name_length}  {'-' * max_first_name_length}  {'-' * max_email_length}"
-    )
+    for column in columns:
+        column.width = len(column.header)
+        for contact in contacts:
+            column.width = max(column.width, len(getattr(contact, column.attr)))
+    print("  ".join(column.header.ljust(column.width) for column in columns))
+    print("  ".join("-" * column.width for column in columns))
     for contact in contacts:
         print(
-            f"{contact.last_name:<{max_last_name_length}}  "
-            f"{contact.first_name:<{max_first_name_length}}  "
-            f"{contact.email}"
+            "  ".join(getattr(contact, column.attr).ljust(column.width) for column in columns)
         )
 
 
