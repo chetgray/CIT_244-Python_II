@@ -162,7 +162,7 @@ def print_table(records: Iterable[object], columns: Iterable[Column]) -> None:
         for record in records:
             column.width = max(column.width, len(getattr(record, column.attr)))
     print("  ".join(column.header.ljust(column.width) for column in columns))
-    print("  ".join("-" * column.width for column in columns))
+    print("  ".join("=" * column.width for column in columns))
     for record in records:
         print("  ".join(getattr(record, column.attr).ljust(column.width) for column in columns))
 
