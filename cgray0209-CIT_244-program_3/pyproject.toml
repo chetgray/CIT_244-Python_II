@@ -1,0 +1,19 @@
+[tool.poetry]
+  authors = [ "Chet Gray <cgray0209@kctcs.edu>" ]
+  description = "CIT 244: Python II (4226_55Z1) - Program 3: Python & databases - sqlite3 and the wx.ListCtrl"
+  license = "Proprietary"
+  name = "cgray0209-cit-244-program-3"
+  packages = [ { include = "cgray0209_cit_244_program_3" } ]
+  readme = "README.rst"
+  version = "0.1.0"
+
+  [tool.poetry.dependencies]
+    python = "~3.9.16"
+    wxpython = [
+      { markers = "sys_platform == 'linux'", url = "https://extras.wxpython.org/wxPython4/extras/linux/gtk3/debian-11/wxPython-4.2.0-cp39-cp39-linux_x86_64.whl" },
+      { markers = "sys_platform != 'linux'", version = "~4.2.0" },
+    ]
+
+[build-system]
+  build-backend = "poetry.core.masonry.api"
+  requires = [ "poetry-core" ]
