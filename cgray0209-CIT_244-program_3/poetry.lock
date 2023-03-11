@@ -518,6 +518,18 @@ files = [
 ]
 
 [[package]]
+name = "types-wxpython"
+version = "0.5.3"
+description = "Typing stubs for wxPython"
+category = "dev"
+optional = false
+python-versions = ">=3.8.1,<4.0.0"
+files = [
+    {file = "types_wxpython-0.5.3-py3-none-any.whl", hash = "sha256:52f68ee883f8aff2826191f1be5b46703efc23522106dda2e4227e50100ba0da"},
+    {file = "types_wxpython-0.5.3.tar.gz", hash = "sha256:f2ae512c4eae759ae789e33a5de52a5521c2d1b7eba854eebadf6350a6248233"},
+]
+
+[[package]]
 name = "typing-extensions"
 version = "4.5.0"
 description = "Backported and Experimental Type Hints for Python 3.7+"
@@ -637,4 +649,4 @@ url = "https://extras.wxpython.org/wxPython4/extras/linux/gtk3/debian-11/wxPytho
 [metadata]
 lock-version = "2.0"
     python-versions = "~3.9.16"
-content-hash = "74fd7b244b79cfa0d8043f550d22bb4b8a556200ac0f841cab9ba910d98d9809"
+content-hash = "1c436d198f8af5c78411895b8911ba69b68705339fb38e5b4e724c0a1579c313"
