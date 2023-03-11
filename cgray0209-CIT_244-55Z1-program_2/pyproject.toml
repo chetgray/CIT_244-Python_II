@@ -1,0 +1,16 @@
+[tool.poetry]
+  authors = [ "Chet Gray <cgray0209@kctcs.edu>" ]
+  description = ""
+  license = "MIT"
+  name = "cgray0209-cit-244-55z1-program-2"
+  packages = [ { include = "program_2.py" } ]
+  readme = "README.rst"
+  version = "0.1.0"
+
+  [tool.poetry.dependencies]
+    python = "~3.9.16"
+    wxPython = "~4.2.0"
+
+[build-system]
+  build-backend = "poetry.core.masonry.api"
+  requires = [ "poetry-core" ]
