@@ -17,6 +17,8 @@ You need to do 2 things to make this program work.
    into a :python:`wx.ListCtrl`. The program also uses a dialog box to
    allow adding new records to the table.
 
+.. _`tickets.csv`: https://elearning.kctcs.edu/bbcswebdav/pid-47334894-dt-content-rid-349590076_2/courses/JFC_4226_CIT_244_55Z1_83606/JFC_4226_CIT_244_55Z1_83606_ImportedContent_20221205032009/programs/tickets.csv
+
 For me to run and grade your program using my database, our two database
 need the have the same db name, same column names, and the same column
 data types. So, please follow the given instructions carefully.
@@ -97,14 +99,14 @@ layout as long is it works like that shown. The list control should be
 wide enough that you don't need a horizontal scroll bar. A vertical
 scroll bar is fine.
 
-.. image:: https://alt-5beddfe10b70f.blackboard.com/bbcswebdav/pid-47334894-dt-content-rid-349590076_2/courses/JFC_4226_CIT_244_55Z1_83606/JFC_4226_CIT_244_55Z1_83606_ImportedContent_20221205032009/programs/p3_tickets_table.PNG
+.. image:: https://elearning.kctcs.edu/bbcswebdav/pid-47334894-dt-content-rid-349590076_2/courses/JFC_4226_CIT_244_55Z1_83606/JFC_4226_CIT_244_55Z1_83606_ImportedContent_20221205032009/programs/p3_tickets_table.PNG
 
 Clicking the "Insert Citation" button should open a dialog box that
 allows adding a new record to the table. You do not necessarily need to
 have the dialog widgets in 2 columns as shown, a single column would
 work just as well.
 
-.. image:: https://alt-5beddfe10b70f.blackboard.com/bbcswebdav/pid-47334894-dt-content-rid-349590076_2/courses/JFC_4226_CIT_244_55Z1_83606/JFC_4226_CIT_244_55Z1_83606_ImportedContent_20221205032009/programs/p3_tickets_dialog.PNG
+.. image:: https://elearning.kctcs.edu/bbcswebdav/pid-47334894-dt-content-rid-349590076_2/courses/JFC_4226_CIT_244_55Z1_83606/JFC_4226_CIT_244_55Z1_83606_ImportedContent_20221205032009/programs/p3_tickets_dialog.PNG
 
 After entering data for a new record, clicking the "OK" button in the
 dialog box should insert the record into the tickets table. Your code
@@ -114,7 +116,7 @@ If you missed it, once more here's a link to the tickets CSV file.
 
     `tickets.csv`_
 
-.. _`tickets.csv`: https://alt-5beddfe10b70f.blackboard.com/bbcswebdav/pid-47334894-dt-content-rid-349590076_2/courses/JFC_4226_CIT_244_55Z1_83606/JFC_4226_CIT_244_55Z1_83606_ImportedContent_20221205032009/programs/tickets.csv
+.. _`tickets.csv`: https://elearning.kctcs.edu/bbcswebdav/pid-47334894-dt-content-rid-349590076_2/courses/JFC_4226_CIT_244_55Z1_83606/JFC_4226_CIT_244_55Z1_83606_ImportedContent_20221205032009/programs/tickets.csv
 
 Here's what you need to do to get 100% on this one.
 
