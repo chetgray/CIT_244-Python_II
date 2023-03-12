@@ -232,8 +232,10 @@ class TicketListFrame(wx.Frame):
         try:
             self.load_data()
         except sqlite3.Error as ex:
-            dialog = wx.MessageDialog(self, str(ex), "Database Error", wx.OK | wx.ICON_ERROR)
-            dialog.ShowModal()
+            error_modal = wx.MessageDialog(
+                self, str(ex), "Database Error", wx.OK | wx.ICON_ERROR
+            )
+            error_modal.ShowModal()
 
     def load_data(self):
         self.ticket_list_ctrl.DeleteAllItems()
@@ -254,10 +256,10 @@ class TicketListFrame(wx.Frame):
                 # self.insert_data(dialog)
                 pass
             except sqlite3.Error as ex:
-                dialog = wx.MessageDialog(
+                error_modal = wx.MessageDialog(
                     self, str(ex), "Database Error", wx.OK | wx.ICON_ERROR
                 )
-                dialog.ShowModal()
+                error_modal.ShowModal()
 
     def on_close_button(self, event: wx.CommandEvent):
         self.Close()
@@ -265,7 +267,7 @@ class TicketListFrame(wx.Frame):
 
 class InsertTicketDialog(wx.Dialog):
     def __init__(self, parent: Optional[wx.Window]):
-        wx.Dialog.__init__(self, parent, title="Insert Citation")
+        wx.Dialog.__init__(self, parent, title="Insert Citation", size=(600, 400))
 
         # +------------------------------------------------------+
         # | "Insert Citation"                                    |
@@ -295,8 +297,27 @@ class InsertTicketDialog(wx.Dialog):
         self.age_ctrl = wx.TextCtrl(panel)
         sex_label = wx.StaticText(panel, label="Sex:")
         self.sex_ctrl = wx.TextCtrl(panel)
-    def on_insert(self, event: wx.CommandEvent):
-        pass
+        input_sizer = wx.FlexGridSizer(rows=4, cols=4, hgap=5, vgap=5)
+        input_sizer.AddMany(
+            [
+                (ticket_id_label, 0, wx.ALIGN_RIGHT | wx.ALIGN_CENTER_VERTICAL),
+                (self.ticket_id_ctrl, 0, wx.EXPAND),
+                (date_label, 0, wx.ALIGN_RIGHT | wx.ALIGN_CENTER_VERTICAL),
+                (self.date_ctrl, 0, wx.EXPAND),
+                (time_label, 0, wx.ALIGN_RIGHT | wx.ALIGN_CENTER_VERTICAL),
+                (self.time_ctrl, 0, wx.EXPAND),
+                (actual_speed_label, 0, wx.ALIGN_RIGHT | wx.ALIGN_CENTER_VERTICAL),
+                (self.actual_speed_ctrl, 0, wx.EXPAND),
+                (posted_speed_label, 0, wx.ALIGN_RIGHT | wx.ALIGN_CENTER_VERTICAL),
+                (self.posted_speed_ctrl, 0, wx.EXPAND),
+                (mph_over_label, 0, wx.ALIGN_RIGHT | wx.ALIGN_CENTER_VERTICAL),
+                (self.mph_over_ctrl, 0, wx.EXPAND),
+                (age_label, 0, wx.ALIGN_RIGHT | wx.ALIGN_CENTER_VERTICAL),
+                (self.age_ctrl, 0, wx.EXPAND),
+                (sex_label, 0, wx.ALIGN_RIGHT | wx.ALIGN_CENTER_VERTICAL),
+                (self.sex_ctrl, 0, wx.EXPAND),
+            ]
+        )
 
         insert_button = wx.Button(panel, label="Insert")
         insert_button.Bind(wx.EVT_BUTTON, self.on_insert_button)
@@ -315,7 +336,7 @@ class InsertTicketDialog(wx.Dialog):
         )
         sizer.Add(wx.StaticLine(panel), proportion=0, flag=wx.EXPAND)
         sizer.Add(
-            wx.FlexGridSizer(8, 2, 5, 5),
+            input_sizer,
             proportion=0,
             flag=wx.ALIGN_CENTER | wx.ALL,
             border=5,
