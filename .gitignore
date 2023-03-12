@@ -1,6 +1,16 @@
 # File created using '.gitignore Generator' for Visual Studio Code: https://bit.ly/vscode-gig
-# Created by https://www.toptal.com/developers/gitignore/api/visualstudiocode,virtualenv,venv,python,linux
-# Edit at https://www.toptal.com/developers/gitignore?templates=visualstudiocode,virtualenv,venv,python,linux
+# Created by https://www.toptal.com/developers/gitignore/api/visualstudiocode,virtualenv,venv,python,linux,database
+# Edit at https://www.toptal.com/developers/gitignore?templates=visualstudiocode,virtualenv,venv,python,linux,database
+
+### Database ###
+*.accdb
+*.db
+*.dbf
+*.mdb
+*.pdb
+*.sqlite3
+*.db-shm
+*.db-wal
 
 ### Linux ###
 *~
@@ -224,7 +234,7 @@ pip-selfcheck.json
 .history
 .ionide
 
-# End of https://www.toptal.com/developers/gitignore/api/visualstudiocode,virtualenv,venv,python,linux
+# End of https://www.toptal.com/developers/gitignore/api/visualstudiocode,virtualenv,venv,python,linux,database
 
 # Custom rules (everything added below won't be overriden by 'Generate .gitignore File' if you use 'Update' option)
 
