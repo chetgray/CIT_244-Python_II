@@ -149,14 +149,43 @@ Here's what you need to do to get 100% on this one.
   window.
 """  # noqa: line-too-long
 
+import sqlite3
+from contextlib import ExitStack, closing
+from dataclasses import dataclass
+from pathlib import Path
 from typing import Optional
 
 import wx
 
+# Column = namedtuple("Column", ["name", "heading", "format", "width"])
+
+
+@dataclass
+class Column:
+    name: str
+    heading: str
+    format: Optional[int]
+    width: int
+
+
+# tid,stop_date,stop_time,actual_speed,posted_speed,miles_over,age,violator_sex
+_columns = [
+    Column("tid", "ID", None, 50),
+    Column("stop_date", "Stop Date", None, 100),
+    Column("stop_time", "Stop Time", None, 100),
+    Column("actual_speed", "Actual Speed", None, 100),
+    Column("posted_speed", "Posted Speed", None, 100),
+    Column("miles_over", "Miles Over", None, 100),
+    Column("age", "Violator Age", None, 100),
+    Column("violator_sex", "Violator Sex", None, 100),
+]
+
+_db_path = Path("speeding_tickes.db")
+
 
 class TicketListFrame(wx.Frame):
     def __init__(self, parent: Optional[wx.Window]):
-        wx.Frame.__init__(self, parent, title="Traffic Tickets")
+        wx.Frame.__init__(self, parent, title="Traffic Tickets", size=(800, 600))
 
         # +---------------------------------------------------+
         # | "Citation Data"                                   |
@@ -170,6 +199,8 @@ class TicketListFrame(wx.Frame):
         panel = wx.Panel(self)
 
         self.ticket_list_ctrl = wx.ListCtrl(panel, style=wx.LC_REPORT)
+        for col_idx, col in enumerate(_columns):
+            self.ticket_list_ctrl.InsertColumn(col_idx, col.heading, width=col.width)
 
         display_button = wx.Button(panel, label="Display")
         insert_button = wx.Button(panel, label="Insert Citation")
@@ -191,24 +222,141 @@ class TicketListFrame(wx.Frame):
         sizer.Add(wx.StaticLine(panel), proportion=0, flag=wx.EXPAND)
         sizer.Add(button_sizer, proportion=0, flag=wx.ALIGN_CENTER | wx.ALL, border=5)
 
-        display_button.Bind(wx.EVT_BUTTON, self.on_display)
-        insert_button.Bind(wx.EVT_BUTTON, self.on_insert)
-        close_button.Bind(wx.EVT_BUTTON, self.on_close)
+        display_button.Bind(wx.EVT_BUTTON, self.on_display_button)
+        insert_button.Bind(wx.EVT_BUTTON, self.on_insert_button)
+        close_button.Bind(wx.EVT_BUTTON, self.on_close_button)
 
         panel.SetSizerAndFit(sizer)
 
-    def on_display(self, event: wx.CommandEvent):
-        pass
+    def on_display_button(self, event: wx.CommandEvent):
+        try:
+            self.load_data()
+        except sqlite3.Error as ex:
+            dialog = wx.MessageDialog(self, str(ex), "Database Error", wx.OK | wx.ICON_ERROR)
+            dialog.ShowModal()
 
+    def load_data(self):
+        self.ticket_list_ctrl.DeleteAllItems()
+        with ExitStack() as db_stack:  # auto-close
+            con = db_stack.enter_context(closing(sqlite3.connect(_db_path)))
+            # auto-commit/rollback
+            db_stack.enter_context(con)
+            cur = con.cursor()
+            cur.execute("SELECT * FROM tickets")
+            tickets = cur.fetchall()
+            for row in tickets:
+                self.ticket_list_ctrl.Append(row)
+
+    def on_insert_button(self, event: wx.CommandEvent):
+        dialog = InsertTicketDialog(self)
+        if dialog.ShowModal() == wx.ID_OK:
+            try:
+                # self.insert_data(dialog)
+                pass
+            except sqlite3.Error as ex:
+                dialog = wx.MessageDialog(
+                    self, str(ex), "Database Error", wx.OK | wx.ICON_ERROR
+                )
+                dialog.ShowModal()
+
+    def on_close_button(self, event: wx.CommandEvent):
+        self.Close()
+
+
+class InsertTicketDialog(wx.Dialog):
+    def __init__(self, parent: Optional[wx.Window]):
+        wx.Dialog.__init__(self, parent, title="Insert Citation")
+
+        # +------------------------------------------------------+
+        # | "Insert Citation"                                    |
+        # +------------------------------------------------------+
+        # |    Ticket Id: [        ]            Date: [        ] |
+        # |         Time: [        ]    Actual Speed: [        ] |
+        # | Posted Speed: [        ]        MPH Over: [        ] |
+        # |          Age: [        ]             Sex: [        ] |
+        # |  [ OK ] [ Cancel ]                                   |
+        # +------------------------------------------------------+
+
+        panel = wx.Panel(self)
+
+        ticket_id_label = wx.StaticText(panel, label="Ticket Id:")
+        self.ticket_id_ctrl = wx.TextCtrl(panel)
+        date_label = wx.StaticText(panel, label="Date:")
+        self.date_ctrl = wx.TextCtrl(panel)
+        time_label = wx.StaticText(panel, label="Time:")
+        self.time_ctrl = wx.TextCtrl(panel)
+        actual_speed_label = wx.StaticText(panel, label="Actual Speed:")
+        self.actual_speed_ctrl = wx.TextCtrl(panel)
+        posted_speed_label = wx.StaticText(panel, label="Posted Speed:")
+        self.posted_speed_ctrl = wx.TextCtrl(panel)
+        mph_over_label = wx.StaticText(panel, label="MPH Over:")
+        self.mph_over_ctrl = wx.TextCtrl(panel)
+        age_label = wx.StaticText(panel, label="Age:")
+        self.age_ctrl = wx.TextCtrl(panel)
+        sex_label = wx.StaticText(panel, label="Sex:")
+        self.sex_ctrl = wx.TextCtrl(panel)
     def on_insert(self, event: wx.CommandEvent):
         pass
 
-    def on_close(self, event: wx.CommandEvent):
+        insert_button = wx.Button(panel, label="Insert")
+        insert_button.Bind(wx.EVT_BUTTON, self.on_insert_button)
+        cancel_button = wx.Button(panel, label="Cancel")
+        cancel_button.Bind(wx.EVT_BUTTON, self.on_cancel_button)
+        button_sizer = wx.BoxSizer(wx.HORIZONTAL)
+        button_sizer.Add(insert_button, proportion=0, flag=wx.ALL, border=5)
+        button_sizer.Add(cancel_button, proportion=0, flag=wx.ALL, border=5)
+
+        sizer = wx.BoxSizer(wx.VERTICAL)
+        sizer.Add(
+            wx.StaticText(panel, label="Insert Citation"),
+            proportion=0,
+            flag=wx.ALIGN_LEFT | wx.ALL,
+            border=5,
+        )
+        sizer.Add(wx.StaticLine(panel), proportion=0, flag=wx.EXPAND)
+        sizer.Add(
+            wx.FlexGridSizer(8, 2, 5, 5),
+            proportion=0,
+            flag=wx.ALIGN_CENTER | wx.ALL,
+            border=5,
+        )
+        sizer.Add(button_sizer, proportion=0, flag=wx.ALIGN_CENTER | wx.ALL, border=5)
+
+        panel.SetSizerAndFit(sizer)
+
+    def on_insert_button(self, event: wx.CommandEvent):
+        with ExitStack() as db_stack:  # auto-close
+            con = db_stack.enter_context(closing(sqlite3.connect(_db_path)))
+            # auto-commit/rollback
+            db_stack.enter_context(con)
+
+    def on_cancel_button(self, event: wx.CommandEvent):
         self.Close()
+
+
+def create_table():
+    with ExitStack() as db_stack:  # auto-close
+        con = db_stack.enter_context(closing(sqlite3.connect(_db_path)))
+        # auto-commit/rollback
+        db_stack.enter_context(con)
+        con.execute(
+            """
+            CREATE TABLE IF NOT EXISTS tickets (
+                tid INTEGER PRIMARY KEY,
+                stop_date TEXT,
+                stop_time TEXT,
+                actual_speed INTEGER,
+                posted_speed INTEGER,
+                miles_over INTEGER,
+                age INTEGER,
+                violator_sex TEXT
+            )"""
+        )
 
 
 class TicektApp(wx.App):
     def OnInit(self):
+        create_table()
         frame = TicketListFrame(None)
         self.SetTopWindow(frame)
         frame.Show()
