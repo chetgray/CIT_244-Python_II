@@ -5,7 +5,7 @@
   name = "cgray0209-cit-244-program-3"
   packages = [ { include = "cgray0209_cit_244_program_3" } ]
   readme = "README.rst"
-  version = "0.1.0"
+  version = "0.2.0"
 
   [tool.poetry.dependencies]
     python = "~3.9.16"
