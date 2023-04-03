@@ -1,0 +1,27 @@
+[tool.poetry]
+  authors = [ "Chet Gray <cgray0209@kctcs.edu>" ]
+  description = "CIT 244: Python II (4226_55Z1) - Program 4: more on wx.python, web services, & databases"
+  license = "UNLICENSED"
+  name = "cgray0209-cit-244-program-4"
+  packages = [ { include = "my_stocks" } ]
+  readme = "README.rst"
+  version = "0.1.0"
+
+  [tool.poetry.dependencies]
+    python = "~3.9.16"
+    requests = "~2.28.2"
+    wxpython = [
+      { markers = "sys_platform == 'linux'", url = "https://extras.wxpython.org/wxPython4/extras/linux/gtk3/debian-11/wxPython-4.2.0-cp39-cp39-linux_x86_64.whl" },
+      { markers = "sys_platform != 'linux'", version = "~4.2.0" },
+    ]
+
+  [tool.poetry.group.dev.dependencies]
+    black = "^23.1.0"
+    flake8 = "^6.0.0"
+    mypy = "^1.1.1"
+    pylint = "^2.17.0"
+    types-wxpython = "^0.5.3"
+
+[build-system]
+  build-backend = "poetry.core.masonry.api"
+  requires = [ "poetry-core" ]
