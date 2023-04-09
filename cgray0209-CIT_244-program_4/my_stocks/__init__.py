@@ -3,12 +3,14 @@ import locale
 import sqlite3
 import sys
 from contextlib import ExitStack
+from pathlib import Path
 from typing import Optional
 
 import requests
 import wx
 
 DEFAULT_API_KEY = "dEfAuLtApIkEy"
+DEFAULT_DB_PATH = Path("tech_stocks.db")
 locale.setlocale(locale.LC_ALL, "en_US.UTF-8")
 
 
@@ -55,9 +57,10 @@ class StockListFrame(wx.Frame):
           loss for each of the 9 stocks and display those values.
     """
 
-    def __init__(self, parent: Optional[wx.Window], api_key: str):
-        wx.Frame.__init__(self, parent, title="My Stocks", size=(800, 600))
+    def __init__(self, parent: Optional[wx.Window], api_key: str, db_path: Path):
         self.api_key = api_key
+        self.db_path = db_path
+        wx.Frame.__init__(self, parent, title="My Stocks", size=(800, 600))
 
         panel = wx.Panel(self)
 
@@ -117,7 +120,7 @@ class StockListFrame(wx.Frame):
         # connect to the db
         with ExitStack() as db_stack:
             # auto-close
-            con = db_stack.enter_context(sqlite3.connect("tech_stocks.db"))
+            con = db_stack.enter_context(sqlite3.connect(self.db_path))
             # auto-commit/rollback
             db_stack.enter_context(con)
             cur = con.cursor()
@@ -171,12 +174,13 @@ def get_current_price(api_key: str, symbol: str) -> Optional[float]:
 
 
 class MyStocksApp(wx.App):
-    def __init__(self, api_key: str):
+    def __init__(self, api_key: str, db_path: Path):
         self.api_key = api_key
-        super().__init__()
+        self.db_path = db_path
+        wx.App.__init__(self)
 
     def OnInit(self) -> bool:
-        frame = StockListFrame(None, api_key=self.api_key)
+        frame = StockListFrame(None, api_key=self.api_key, db_path=self.db_path)
         self.SetTopWindow(frame)
         frame.Show()
         return True
@@ -194,12 +198,19 @@ def main(argv: Optional[list[str]] = None) -> int:
         "--key",
         dest="api_key",
         help="finnhub API key",
-        required=True,
         default=DEFAULT_API_KEY,
+    )
+    parser.add_argument(
+        "-d",
+        "--db",
+        dest="db_path",
+        help="path to database",
+        default=DEFAULT_DB_PATH,
+        type=Path,
     )
     options = parser.parse_args(argv[1:])
 
-    app = MyStocksApp(api_key=options.api_key)
+    app = MyStocksApp(api_key=options.api_key, db_path=options.db_path)
     app.MainLoop()
 
     return 0
