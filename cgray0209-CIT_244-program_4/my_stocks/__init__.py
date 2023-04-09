@@ -1,13 +1,15 @@
-import array
 import datetime
+import locale
 import sqlite3
 import sys
+from contextlib import ExitStack
 from typing import Optional
 
 import requests
 import wx
 
 DEFAULT_API_KEY = "dEfAuLtApIkEy"
+locale.setlocale(locale.LC_ALL, "en_US.UTF-8")
 
 
 # main frame
@@ -60,8 +62,8 @@ class StockListFrame(wx.Frame):
         panel = wx.Panel(self)
 
         # create Date and Net Gain/Loss labels
-        date_label = wx.StaticText(panel, label="Date:", style=wx.ALIGN_RIGHT)
-        self.date_value = wx.StaticText(panel, label="")
+        datetime_label = wx.StaticText(panel, label="Last updated:", style=wx.ALIGN_RIGHT)
+        self.datetime_value = wx.StaticText(panel, label="")
         net_gain_loss_label = wx.StaticText(panel, label="Net gain/loss:", style=wx.ALIGN_RIGHT)
         self.net_gain_loss_value = wx.StaticText(panel, label="")
 
@@ -72,10 +74,10 @@ class StockListFrame(wx.Frame):
         )
         self.list_ctrl.InsertColumn(0, "Company", width=150)
         self.list_ctrl.InsertColumn(1, "Symbol", width=75)
-        self.list_ctrl.InsertColumn(2, "Purchase Price", width=100)
-        self.list_ctrl.InsertColumn(3, "Current Price", width=100)
-        self.list_ctrl.InsertColumn(4, "Shares", width=75)
-        self.list_ctrl.InsertColumn(5, "Gain/Loss", width=100)
+        self.list_ctrl.InsertColumn(2, "Purchase Price", format=wx.LIST_FORMAT_RIGHT, width=125)
+        self.list_ctrl.InsertColumn(3, "Current Price", format=wx.LIST_FORMAT_RIGHT, width=125)
+        self.list_ctrl.InsertColumn(4, "Shares", format=wx.LIST_FORMAT_RIGHT, width=100)
+        self.list_ctrl.InsertColumn(5, "Gain/Loss", format=wx.LIST_FORMAT_RIGHT, width=125)
 
         # create buttons
         display_data_button = wx.Button(panel, label="Display Data")
@@ -83,8 +85,8 @@ class StockListFrame(wx.Frame):
 
         # create sizers
         date_sizer = wx.BoxSizer(wx.HORIZONTAL)
-        date_sizer.Add(date_label, 0, wx.ALL, 5)
-        date_sizer.Add(self.date_value, 0, wx.ALL, 5)
+        date_sizer.Add(datetime_label, 0, wx.ALL, 5)
+        date_sizer.Add(self.datetime_value, 0, wx.ALL, 5)
 
         net_gain_loss_sizer = wx.BoxSizer(wx.HORIZONTAL)
         net_gain_loss_sizer.Add(net_gain_loss_label, 0, wx.ALL, 5)
@@ -110,12 +112,62 @@ class StockListFrame(wx.Frame):
     def on_display_data(self, event: wx.CommandEvent) -> None:
         """Display data in list control."""
         self.list_ctrl.DeleteAllItems()
-        self.date_value.SetLabel(datetime.datetime.now().strftime("%Y-%m-%d"))
-        self.net_gain_loss_value.SetLabel("0.00")
+        self.datetime_value.SetLabel(datetime.datetime.now().strftime("%A, %B %d, %Y %H:%M"))
+        total_gain_loss = 0.0
+        # connect to the db
+        with ExitStack() as db_stack:
+            # auto-close
+            con = db_stack.enter_context(sqlite3.connect("tech_stocks.db"))
+            # auto-commit/rollback
+            db_stack.enter_context(con)
+            cur = con.cursor()
+            cur.row_factory = sqlite3.Row  # type: ignore
+            cur.execute("SELECT * FROM dow_stocks")
+            rows: list[sqlite3.Row] = cur.fetchall()
+            for row in rows:
+                current_price = get_current_price(self.api_key, row["symbol"])
+                gain_loss: Optional[float] = (
+                    (current_price - row["purchase_price"]) * row["shares"]
+                    if current_price is not None
+                    else None
+                )
+                total_gain_loss += gain_loss or 0.0
+                self.list_ctrl.Append(
+                    (
+                        row["company"],
+                        row["symbol"],
+                        locale.currency(row["purchase_price"], grouping=True),
+                        (
+                            locale.currency(current_price, grouping=True)
+                            if current_price is not None
+                            else "unavailable"
+                        ),
+                        f"{row['shares']:,}",
+                        (
+                            locale.currency(gain_loss, grouping=True)
+                            if gain_loss is not None
+                            else "unavailable"
+                        ),
+                    )
+                )
+        self.net_gain_loss_value.SetLabel(locale.currency(total_gain_loss, grouping=True))
 
     def on_cancel(self, event: wx.CommandEvent) -> None:
         """Close the frame, terminating the application."""
         self.Close(True)
+
+
+def get_current_price(api_key: str, symbol: str) -> Optional[float]:
+    """Get current price of stock."""
+    url = f"https://finnhub.io/api/v1/quote?symbol={symbol}&token={api_key}"
+    try:
+        response = requests.get(url, timeout=5)
+    except requests.exceptions.Timeout:
+        return None
+    try:
+        return response.json()["c"]
+    except (KeyError, TypeError):
+        return None
 
 
 class MyStocksApp(wx.App):
