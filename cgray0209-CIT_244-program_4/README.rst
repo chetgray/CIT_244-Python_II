@@ -8,6 +8,19 @@ services, & databases
 .. role:: sql(code)
     :language: sql
 
+The program can be run from the command line either as a module or as an
+executable package. Pass your Finnhub.io API key with the
+``-k`` / ``--key`` option.
+
+.. code-block:: shell
+
+    python my_stocks --key API_KEY
+    # or
+    python -m my_stocks --key API_KEY
+
+Alternatively, modify the :python:`DEFAULT_API_KEY` variable in the
+``my_stocks/__init__.py`` file to hold your API key.
+
 We start with an sqlite3 database named ``tech_stocks.db``. The database
 has a table named ``dow_stocks``, which contains data on 9 of the 30
 stocks that make up the Dow Jones Industrial Average. The table contains
