@@ -118,8 +118,8 @@ class StockListFrame(wx.Frame):
 
 class MyStocksApp(wx.App):
     def __init__(self, api_key: str):
-        super().__init__()
         self.api_key = api_key
+        super().__init__()
 
     def OnInit(self) -> bool:
         frame = StockListFrame(None, api_key=self.api_key)
