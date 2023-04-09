@@ -7,6 +7,8 @@ from typing import Optional
 import requests
 import wx
 
+DEFAULT_API_KEY = "dEfAuLtApIkEy"
+
 
 # main frame
 class StockListFrame(wx.Frame):
@@ -141,6 +143,7 @@ def main(argv: Optional[list[str]] = None) -> int:
         dest="api_key",
         help="finnhub API key",
         required=True,
+        default=DEFAULT_API_KEY,
     )
     options = parser.parse_args(argv[1:])
 
