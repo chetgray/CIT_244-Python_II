@@ -1,16 +1,21 @@
+__author__ = "Chet Gray <cgray0209@kctcs.edu>"
+__copyright__ = "Copyright (c) 2023 Chet Gray"
+__license__ = "UNLICENSED"
+__version__ = "0.3.1"
+
 import datetime
 import locale
 import sqlite3
 import sys
 from contextlib import ExitStack
 from pathlib import Path
-from typing import Optional
+from typing import Final, Optional
 
 import requests
 import wx
 
-DEFAULT_API_KEY = "dEfAuLtApIkEy"
-DEFAULT_DB_PATH = Path("tech_stocks.db")
+DEFAULT_API_KEY: Final = "dEfAuLtApIkEy"
+DEFAULT_DB_PATH: Final = Path("tech_stocks.db")
 locale.setlocale(locale.LC_ALL, "en_US.UTF-8")
 
 
@@ -139,21 +144,37 @@ class StockListFrame(wx.Frame):
                     (
                         row["company"],
                         row["symbol"],
-                        locale.currency(row["purchase_price"], grouping=True),
                         (
-                            locale.currency(current_price, grouping=True)
+                            locale.currency(row["purchase_price"], grouping=True)
+                            if locale.getlocale()[1]
+                            else f"{row['purchase_price']:.2f}"
+                        ),
+                        (
+                            (
+                                locale.currency(current_price, grouping=True)
+                                if locale.getlocale()[1]
+                                else f"{current_price:.2f}"
+                            )
                             if current_price is not None
                             else "unavailable"
                         ),
                         f"{row['shares']:,}",
                         (
-                            locale.currency(gain_loss, grouping=True)
+                            (
+                                locale.currency(gain_loss, grouping=True)
+                                if locale.getlocale()[1]
+                                else f"{gain_loss:.2f}"
+                            )
                             if gain_loss is not None
                             else "unavailable"
                         ),
                     )
                 )
-        self.net_gain_loss_value.SetLabel(locale.currency(total_gain_loss, grouping=True))
+        self.net_gain_loss_value.SetLabel(
+            locale.currency(total_gain_loss, grouping=True)
+            if locale.getlocale()[1]
+            else f"{total_gain_loss:.2f}"
+        )
 
     def on_cancel(self, event: wx.CommandEvent) -> None:
         """Close the frame, terminating the application."""
