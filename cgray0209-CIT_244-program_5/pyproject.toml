@@ -5,7 +5,7 @@
   name = "cgray0209-cit-244-program-5"
   packages = [ { include = "cgray0209_cit_244_program_5" } ]
   readme = "README.md"
-  version = "0.1.0"
+  version = "1.0.0"
 
   [tool.poetry.dependencies]
     bottle = { git = "https://github.com/bottlepy/bottle.git" }
