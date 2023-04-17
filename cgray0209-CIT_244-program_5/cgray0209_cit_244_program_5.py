@@ -200,4 +200,53 @@ __copyright__ = "Copyright (c) 2023 Chet Gray"
 __license__ = "UNLICENSED"
 __version__ = "0.1.0"
 
-import bottle
+import sqlite3
+from contextlib import ExitStack
+from pathlib import Path
+
+from bottle import get, post, request, run, template
+
+DB_PATH = Path("travel_expenses.db")
+
+
+@get("/")  # type: ignore
+def login():
+    """Display the login page."""
+    return template("login_form.tpl")
+
+
+@post("/")  # type: ignore
+def do_login():
+    """Login the user."""
+    # pylint: disable-next=no-member
+    username: str = request.forms.get("username")  # type: ignore
+    # pylint: disable-next=no-member
+    password: str = request.forms.get("password")  # type: ignore
+    if not is_valid_login(username, password):
+        return "<p>Login failed.</p>"
+    return "<p>You are now logged in.</p>"
+
+
+def is_valid_login(username: str, password: str) -> bool:
+    """Check if the user is valid."""
+    is_valid = False
+    with ExitStack() as db_stack:
+        # auto-close
+        con = db_stack.enter_context(sqlite3.connect(DB_PATH))
+        # auto-commit/rollback
+        db_stack.enter_context(con)
+        cur = con.cursor()
+        cur.execute(
+            "SELECT * FROM members WHERE username = ? AND password = ?", (username, password)
+        )
+        is_valid = cur.fetchone() is not None
+    return is_valid
+
+
+def _main():
+    """Main entry point for the bottle application."""
+    run(host="localhost", port=8080, debug=True, reloader=True)
+
+
+if __name__ == "__main__":
+    _main()
