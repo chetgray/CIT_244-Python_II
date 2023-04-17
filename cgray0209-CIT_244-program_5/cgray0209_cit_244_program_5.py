@@ -223,8 +223,10 @@ def do_login():
     # pylint: disable-next=no-member
     password: str = request.forms.get("password")  # type: ignore
     if not is_valid_login(username, password):
-        return "<p>Login failed.</p>"
-    return "<p>You are now logged in.</p>"
+        return template(
+            "login_form.tpl", alert_context="warning", alert_message="Invalid login"
+        )
+    return template("user_menu.tpl", username=username)
 
 
 def is_valid_login(username: str, password: str) -> bool:

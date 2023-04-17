@@ -1,6 +1,5 @@
 % rebase('_layout.tpl', page_title='Login', page_heading='Login')
 <form action="/" method="post">
-    <input name="action" type="hidden" value="login" />
     <div>
         <label for="username">Email:</label>
         <input id="username" name="username" type="text" />
@@ -13,3 +12,6 @@
         <input type="submit" value="Login" />
     </div>
 </form>
+% if defined('alert_message'):
+<p class="alert alert-{{ alert_context }}" role="alert">{{ alert_message }}</p>
+% end
