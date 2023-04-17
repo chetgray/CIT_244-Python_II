@@ -204,18 +204,20 @@ import sqlite3
 from contextlib import ExitStack
 from pathlib import Path
 
-from bottle import get, post, request, run, template
+from bottle import Bottle, request, template
 
 DB_PATH = Path("travel_expenses.db")
 
+app = Bottle()
 
-@get("/")  # type: ignore
+
+@app.get("/")  # type: ignore
 def login():
     """Display the login page."""
     return template("login_form.tpl")
 
 
-@post("/")  # type: ignore
+@app.post("/")  # type: ignore
 def do_login():
     """Login the user."""
     # pylint: disable-next=no-member
@@ -247,7 +249,7 @@ def is_valid_login(username: str, password: str) -> bool:
 
 def _main():
     """Main entry point for the bottle application."""
-    run(host="localhost", port=8080, debug=True, reloader=True)
+    app.run(host="localhost", port=8080, debug=True, reloader=True)
 
 
 if __name__ == "__main__":
