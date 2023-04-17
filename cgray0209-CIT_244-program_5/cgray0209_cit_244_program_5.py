@@ -289,6 +289,48 @@ def do_add_trip():
     return template("add_trip_form.tpl", alert_context="success", alert_message="Trip added")
 
 
+@app.get("/listByUser")  # type: ignore
+def list_trips_by_user():
+    """Display the list trips by user page."""
+    return template("list_trips_by_user_form.tpl")
+
+
+@app.post("/listByUser")  # type: ignore
+def do_list_trips_by_user():
+    """List trips by user."""
+    # pylint: disable-next=no-member
+    username: str = request.forms.get("username")  # type: ignore
+    trips: list[sqlite3.Row] = []
+    try:
+        with ExitStack() as db_stack:
+            # auto-close
+            con = db_stack.enter_context(sqlite3.connect(DB_PATH))
+            # auto-commit/rollback
+            db_stack.enter_context(con)
+            cur = con.cursor()
+            cur.row_factory = sqlite3.Row  # type: ignore
+            cur.execute("SELECT * FROM trips WHERE username = ?", (username,))
+            trips = cur.fetchall()
+    except sqlite3.Error as err:
+        return template(
+            "list_trips_by_user_form.tpl",
+            alert_context="warning",
+            alert_message=f"Error listing trips: {err}",
+        )
+    if not trips:
+        return template(
+            "list_trips_by_user_form.tpl",
+            alert_context="warning",
+            alert_message=f"No trips found for {username}",
+        )
+    return template(
+        "list_trips.tpl",
+        page_title="Trips by User",
+        page_heading=f"Trips for {username}",
+        trips=trips,
+    )
+
+
 def _main():
     """Main entry point for the bottle application."""
     app.run(host="localhost", port=8080, debug=True, reloader=True)

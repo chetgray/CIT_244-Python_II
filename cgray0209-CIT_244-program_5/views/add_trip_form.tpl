@@ -20,7 +20,9 @@
         <label for="gallons">Total Gallons</label>
         <input id="gallons" name="gallons" type="number" />
     </div>
-    <button class="btn btn-primary" type="submit">Submit</button>
+    <div>
+        <button class="btn btn-primary" type="submit">Submit</button>
+    </div>
 </form>
 % if defined('alert_message'):
 <p class="alert alert-{{ alert_context }}" role="alert">{{ alert_message }}</p>
