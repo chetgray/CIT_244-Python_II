@@ -341,7 +341,7 @@ def do_list_trips_by_user():
 
 def _main():
     """Main entry point for the bottle application."""
-    app.run(host="localhost", port=8080, debug=True, reloader=True)
+    app.run(host="localhost", port=8080, debug=True)
 
 
 if __name__ == "__main__":
