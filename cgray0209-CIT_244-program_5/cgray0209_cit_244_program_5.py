@@ -247,6 +247,48 @@ def is_valid_login(username: str, password: str) -> bool:
     return is_valid
 
 
+@app.get("/add")  # type: ignore
+def add_trip():
+    """Display the add trip page."""
+    return template("add_trip_form.tpl")
+
+
+@app.post("/add")  # type: ignore
+def do_add_trip():
+    """Add a trip to the database."""
+    # pylint: disable-next=no-member
+    username: str = request.forms.get("username")  # type: ignore
+    # pylint: disable-next=no-member
+    date: str = request.forms.get("date")  # type: ignore
+    # pylint: disable-next=no-member
+    destination: str = request.forms.get("destination")  # type: ignore
+    # pylint: disable-next=no-member
+    miles: str = request.forms.get("miles")  # type: ignore
+    # pylint: disable-next=no-member
+    gallons: str = request.forms.get("gallons")  # type: ignore
+    try:
+        with ExitStack() as db_stack:
+            # auto-close
+            con = db_stack.enter_context(sqlite3.connect(DB_PATH))
+            # auto-commit/rollback
+            db_stack.enter_context(con)
+            cur = con.cursor()
+            cur.execute(
+                (
+                    "INSERT INTO trips (username, date, destination, miles, gallons)"
+                    " VALUES (?, ?, ?, ?, ?)"
+                ),
+                (username, date, destination, miles, gallons),
+            )
+    except sqlite3.Error as err:
+        return template(
+            "add_trip_form.tpl",
+            alert_context="warning",
+            alert_message=f"Error adding trip: {err}",
+        )
+    return template("add_trip_form.tpl", alert_context="success", alert_message="Trip added")
+
+
 def _main():
     """Main entry point for the bottle application."""
     app.run(host="localhost", port=8080, debug=True, reloader=True)
