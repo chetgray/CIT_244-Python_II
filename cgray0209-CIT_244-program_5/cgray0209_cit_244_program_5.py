@@ -300,7 +300,7 @@ def do_list_trips_by_user():
     """List trips by user."""
     # pylint: disable-next=no-member
     username: str = request.forms.get("username")  # type: ignore
-    trips: list[sqlite3.Row] = []
+    trips = []
     try:
         with ExitStack() as db_stack:
             # auto-close
@@ -309,7 +309,15 @@ def do_list_trips_by_user():
             db_stack.enter_context(con)
             cur = con.cursor()
             cur.row_factory = sqlite3.Row  # type: ignore
-            cur.execute("SELECT * FROM trips WHERE username = ?", (username,))
+            cur.execute(
+                (
+                    "SELECT trip_id, username, date, destination, miles, gallons,"
+                    " miles / gallons AS mpg"
+                    " FROM trips"
+                    " WHERE username = ?"
+                ),
+                (username,),
+            )
             trips = cur.fetchall()
     except sqlite3.Error as err:
         return template(
