@@ -8,6 +8,7 @@
   version = "0.1.0"
 
   [tool.poetry.dependencies]
+    bottle = { git = "https://github.com/bottlepy/bottle.git" }
     python = "~3.9.16"
 
   [tool.poetry.group.dev.dependencies]
