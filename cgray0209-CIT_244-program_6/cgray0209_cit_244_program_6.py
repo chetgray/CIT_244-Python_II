@@ -272,3 +272,26 @@ __author__ = "Chet Gray <cgray0209@kctcs.edu>"
 __copyright__ = "Copyright (c) 2023 Chet Gray"
 __license__ = "UNLICENSED"
 __version__ = "0.1.0"
+
+from pathlib import Path
+
+from bottle import Bottle, template  # type: ignore
+
+DB_PATH = Path("payroll.db")
+
+app = Bottle()
+
+
+@app.get("/")  # type: ignore
+def index() -> str:
+    """Display the welcome page."""
+    return template("welcome")
+
+
+def _main():
+    """Main entry point for the bottle application."""
+    app.run(host="localhost", port=8080, debug=True, reloader=True)
+
+
+if __name__ == "__main__":
+    _main()
