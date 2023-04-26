@@ -1,0 +1,21 @@
+[tool.poetry]
+  authors = [ "Chet Gray <cgray0209@kctcs.edu>" ]
+  description = "CIT 244: Python II - Program 6: Bootstrap"
+  license = "UNLICENSED"
+  name = "cgray0209-cit-244-program-6"
+  packages = [ { include = "cgray0209_cit_244_program_6.py" } ]
+  readme = "README.rst"
+  version = "0.1.0"
+
+  [tool.poetry.dependencies]
+    python = "~3.9.16"
+
+  [tool.poetry.group.dev.dependencies]
+    black = "*"
+    flake8 = "*"
+    mypy = "*"
+    pylint = "*"
+
+[build-system]
+  build-backend = "poetry.core.masonry.api"
+  requires = [ "poetry-core" ]
