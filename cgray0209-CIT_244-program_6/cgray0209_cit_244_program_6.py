@@ -285,7 +285,7 @@ app = Bottle()
 @app.get("/")  # type: ignore
 def index() -> str:
     """Display the welcome page."""
-    return template("welcome")
+    return template("welcome", active_page="home")
 
 
 def _main():

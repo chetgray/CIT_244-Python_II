@@ -32,17 +32,28 @@
                     <div class="navbar-collapse collapse" id="navbarSupportedContent">
                         <ul class="navbar-nav mt-2 mt-lg-0 me-auto">
                             <li class="nav-item">
-                                <a class="nav-link" href="/" aria-current="page"
-                                    >Home <span class="visually-hidden">(current)</span></a
+                                <a
+                                    class="nav-link {{ 'active' if active_page == 'home' else '' }}"
+                                    href="/"
+                                    {{ 'aria-current="page"' if active_page == 'home' else '' }}
+                                    >Home</a
                                 >
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="/list-by-department"
+                                <a
+                                    class="nav-link {{ 'active' if active_page == 'view-by-department' else '' }}"
+                                    href="/view-by-department"
+                                    {{ 'aria-current="page"' if active_page == 'view-by-department' else '' }}
                                     >View by Department</a
                                 >
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="/update-hours">Edit Employee Data</a>
+                                <a
+                                    class="nav-link {{ 'active' if active_page == 'update-hours' else '' }}"
+                                    href="/update-hours"
+                                    {{ 'aria-current="page"' if active_page == 'update-hours' else '' }}
+                                    >Edit Employee Data</a
+                                >
                             </li>
                         </ul>
                     </div>
