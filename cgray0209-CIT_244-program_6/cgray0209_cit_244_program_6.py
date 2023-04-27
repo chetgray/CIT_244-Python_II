@@ -277,7 +277,7 @@ import sqlite3
 from contextlib import ExitStack, closing
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Union
+from typing import Optional, Union, cast
 
 from bottle import Bottle, request, template  # type: ignore
 
@@ -339,7 +339,7 @@ def list_by_department() -> str:
 def do_list_by_department() -> str:
     """Display the employees in the department."""
     # pylint: disable-next=no-member
-    department: Union[str, None] = request.forms.get("department")  # type: ignore
+    department: Optional[str] = request.forms.get("department")  # type: ignore
     pay_period: str = ""
     employees: list[EmployeePayrollViewModel] = []
     with ExitStack() as db_stack:
@@ -347,7 +347,6 @@ def do_list_by_department() -> str:
         con = db_stack.enter_context(closing(sqlite3.connect(DB_PATH)))
         db_stack.enter_context(con)
         cur = db_stack.enter_context(closing(con.cursor()))
-        # get latest pay period
         cur.execute("""
             SELECT MAX(pay_period)
             FROM pay_data
@@ -389,7 +388,67 @@ def edit_employee_data() -> str:
 @app.post("/edit-employee-data")  # type: ignore
 def do_edit_employee_data() -> str:
     """Update the employee's hours worked."""
-    raise NotImplementedError
+    # pylint: disable-next=no-member
+    emp_id = int(request.forms.get("emp_id"))  # type: ignore
+    # pylint: disable-next=no-member
+    hrs_worked = float(request.forms.get("hrs_worked"))  # type: ignore
+    pay_period: str = ""
+    employee: Optional[EmployeePayrollViewModel] = None
+    try:
+        with ExitStack() as db_stack:
+            # auto-close connection, auto-commit/rollback transaction, auto-close cursor
+            con = db_stack.enter_context(closing(sqlite3.connect(DB_PATH)))
+            db_stack.enter_context(con)
+            cur = db_stack.enter_context(closing(con.cursor()))
+            cur.execute("""
+                SELECT MAX(pay_period)
+                FROM pay_data
+                """)
+            pay_period = cur.fetchone()[0]
+            cur.execute(
+                """
+                UPDATE pay_data
+                SET hrs_worked = ?
+                WHERE emp_id = ?
+                    AND pay_period = ?
+                """,
+                (hrs_worked, emp_id, pay_period),
+            )
+            cur.row_factory = employee_payroll_factory
+            cur.execute(
+                """
+                SELECT
+                    employees.emp_id
+                  , employees.emp_name
+                  , employees.department
+                  , employees.wage
+                  , pay_data.hrs_worked
+                FROM employees
+                    JOIN pay_data
+                        ON employees.emp_id = pay_data.emp_id
+                WHERE employees.emp_id = ?
+                    AND pay_data.pay_period = ?
+                """,
+                (emp_id, pay_period),
+            )
+            employee = cur.fetchone()
+    except sqlite3.Error as err:
+        return template(
+            "edit-employee-data-form",
+            active_page="edit-employee-data",
+            alert_context="danger",
+            alert_message=f"Could not update employee data: {err}",
+        )
+    employee = cast(EmployeePayrollViewModel, employee)
+    return template(
+        "list-employee-payroll",
+        active_page="edit-employee-data",
+        department=employee.department,
+        pay_period=pay_period,
+        employees=[employee],
+        alert_context="success",
+        alert_message="Successfully updated employee data.",
+    )
 
 
 def _main():

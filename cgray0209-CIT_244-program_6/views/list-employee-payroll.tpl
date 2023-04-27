@@ -1,4 +1,13 @@
-% rebase('_layout.tpl', page_title='Payroll', page_heading='View Payroll by Department')
+% rebase('_layout.tpl', page_title='Payroll', page_heading='View Payroll')
+% if defined('alert_message'):
+<div
+    class="alert alert-{{ alert_context }} alert-dismissible fade show col-sm-6 my-3 px-3"
+    role="alert"
+>
+    {{ alert_message }}
+    <button class="btn-close" data-bs-dismiss="alert" type="button" aria-label="Close"></button>
+</div>
+% end
 <dl class="row">
     <dt class="col-2">Department</dt>
     <dd class="col-10">{{ department if department else 'All' }}</dd>
@@ -6,7 +15,7 @@
     <dd class="col-10">{{ pay_period }}</dd>
 </dl>
 % if not employees:
-<div class="alert alert-warning" role="alert">
+<div class="alert alert-warning col-sm-6 my-3 px-3" role="alert">
     No records found.
 </div>
 % else:
