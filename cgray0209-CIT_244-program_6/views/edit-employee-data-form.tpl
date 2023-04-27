@@ -6,7 +6,15 @@
     </div>
     <div class="mb-3 col-sm-6">
         <label class="form-label" for="hrs_worked">Hours Worked</label>
-        <input class="form-control" id="hrs_worked" name="hrs_worked" type="number" required />
+        <input
+            class="form-control"
+            id="hrs_worked"
+            name="hrs_worked"
+            type="number"
+            step="0.0001"
+            min="0.0000"
+            required
+        />
     </div>
     <button class="btn btn-primary" type="submit">Update</button>
 </form>
