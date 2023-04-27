@@ -4,7 +4,7 @@
 __author__ = "Chet Gray <cgray0209@kctcs.edu>"
 __copyright__ = "Copyright (c) 2023 Chet Gray"
 __license__ = "UNLICENSED"
-__version__ = "0.1.0"
+__version__ = "1.0.0"
 
 import sqlite3
 from contextlib import ExitStack, closing
