@@ -380,6 +380,18 @@ def do_list_by_department() -> str:
     )
 
 
+@app.get("/edit-employee-data")  # type: ignore
+def edit_employee_data() -> str:
+    """Display the form to enter the employee ID and hours worked."""
+    return template("edit-employee-data-form", active_page="edit-employee-data")
+
+
+@app.post("/edit-employee-data")  # type: ignore
+def do_edit_employee_data() -> str:
+    """Update the employee's hours worked."""
+    raise NotImplementedError
+
+
 def _main():
     """Main entry point for the bottle application."""
     app.run(host="localhost", port=8080, debug=True, reloader=True)

@@ -49,9 +49,9 @@
                             </li>
                             <li class="nav-item">
                                 <a
-                                    class="nav-link {{ 'active' if active_page == 'update-hours' else '' }}"
-                                    href="/update-hours"
-                                    {{ 'aria-current="page"' if active_page == 'update-hours' else '' }}
+                                    class="nav-link {{ 'active' if active_page == 'edit-employee-data' else '' }}"
+                                    href="/edit-employee-data"
+                                    {{ 'aria-current="page"' if active_page == 'edit-employee-data' else '' }}
                                     >Edit Employee Data</a
                                 >
                             </li>
