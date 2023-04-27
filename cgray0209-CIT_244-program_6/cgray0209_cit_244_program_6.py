@@ -432,6 +432,8 @@ def do_edit_employee_data() -> str:
                 (emp_id, pay_period),
             )
             employee = cur.fetchone()
+            if not employee:
+                raise sqlite3.Error(f"Employee ID {emp_id} not found.")
     except sqlite3.Error as err:
         return template(
             "edit-employee-data-form",
