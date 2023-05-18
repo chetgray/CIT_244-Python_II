@@ -279,8 +279,7 @@ def create_tables():
         # auto-commit/rollback
         db_stack.enter_context(con)
         con.execute(
-            "CREATE TABLE IF NOT EXISTS tickets"
-            f" ({', '.join(col.name + ' ' + col.type_ for col in _columns)})"
+            f"CREATE TABLE IF NOT EXISTS tickets ({', '.join(f'{col.name} {col.type_}' for col in _columns)})"
         )
 
 
